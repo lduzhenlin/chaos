@@ -1,0 +1,34 @@
+server:
+  port: 9999
+spring:
+  profiles:
+    active: dev
+  main:
+    banner-mode: off
+
+mybatis-plus:
+  mapper-locations: classpath*:/com/qishanor/**/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+      insert-strategy: not_empty
+      update-strategy: not_null
+      where-strategy: not_empty
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+sa-token:
+  token-prefix: Bearer
+  token-name: Authorization
+  timeout: 86400
+  isPrint: false
+  is-log: true
+
+aj:
+  captcha:
+    #    cache-type: redis
+    water-mark: qishanor
+
+
+

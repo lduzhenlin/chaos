@@ -1,0 +1,21 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chaos_dev?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=PRC&allowPublicKeyRetrieval=true
+    username: root
+    password: 12345678
+
+
+#file:
+#  bucketName: zhenlin-test # 上文创建的桶名称
+#  local:
+#    enable: true
+#    base-path: /data
+# 上面是配置本地存储 ，如果不需要本地存储 ，只需要注释掉local 然后打开下面的oss即可对接 阿里云  腾讯云 华为云
+#  oss:
+#    enable: true
+#    path-style-access: false #使用云OSS 需要关闭
+#    endpoint: oss-cn-beijing.aliyuncs.com
+#    access-key:
+#    secret-key:

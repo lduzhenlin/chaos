@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.qishanor</groupId>
+        <artifactId>so-common</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>so-common-data</artifactId>
+    <packaging>jar</packaging>
+
+    <description>so 数据库操作相关</description>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.qishanor</groupId>
+            <artifactId>so-common-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+            <version>${satoken.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+        <!--mybatis-plus-jsqlparser 是 MyBatis-Plus 提供的一个核心依赖，主要用于 SQL 解析和增强 为 MyBatis-Plus 的高级功能（如分页、乐观锁、租户过滤等）-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- TTL 核心依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+            <version>${ali.ttl.version}</version> <!-- 版本可按需升级，如2.15.0 -->
+        </dependency>
+    </dependencies>
+
+
+</project>

@@ -1,0 +1,18 @@
+services:
+  zeus-ui:
+    build:
+      context: .
+    restart: always
+    container_name: zeus-ui
+    image: zeus-ui
+    networks:
+      - spring_cloud_default
+    external_links:
+      - zeus-gateway
+    ports:
+      - 80:80
+
+# 加入到后端网络， 默认为 zeus_default  | docker network ls   查看
+networks:
+  spring_cloud_default:
+    external: true

@@ -1,0 +1,119 @@
+import { defineStore } from 'pinia';
+import { Local, Session, STORAGE_KEYS } from '/@/utils/storage';
+import { getUserInfo, login, loginByMobile } from '/@/api/login/index';
+import { useMessage } from '/@/hooks/message';
+import Cookies from 'js-cookie';
+
+/**
+ * @function useUserInfo
+ * @returns {UserInfosStore}
+ */
+export const useUserInfo = defineStore('userInfo', {
+	state: (): UserInfosState => ({
+		userInfos: {
+			userName: '',
+			photo: '',
+			time: 0,
+			roles: [],
+			authBtnList: [],
+			tenantId: '',
+			tenantName: '',
+		},
+	}),
+
+	actions: {
+		/**
+		 * 登录方法
+		 * @function login
+		 * @async
+		 * @param {Object} data - 登录数据
+		 * @returns {Promise<Object>}
+		 */
+		async login(data:any) {
+			return new Promise((resolve, reject) => {
+				login(data)
+					.then((res) => {
+						// 存储token 信息
+						const token = res.data?.token || res.data?.tokenInfo?.tokenValue;
+						if (token) {
+							Session.set('token', token);
+						} else {
+							// Token 为空，记录日志并提示
+							useMessage().error('未能读取到有效 token，请检查后端返回数据');
+							reject({ msg: '未能读取到有效 token' });
+							return;
+						}
+						resolve(res);
+					})
+					.catch((err) => {
+						console.error('登录失败:', err);
+						useMessage().error(err?.msg || '系统异常请联系管理员');
+						reject(err);
+					});
+			});
+		},
+
+		/**
+		 * 手机登录方法
+		 * @function loginByMobile
+		 * @async
+		 * @param {Object} data - 登录数据
+		 * @returns {Promise<Object>}
+		 */
+		async loginByMobile(data: { mobile: string; code: string }) {
+			return new Promise((resolve, reject) => {
+				loginByMobile(data.mobile, data.code)
+					.then((res) => {
+						// 存储token 信息
+						Session.set('token', res.access_token);
+						Session.set('refresh_token', res.refresh_token);
+						resolve(res);
+					})
+					.catch((err) => {
+						useMessage().error(err?.msg || '系统异常请联系管理员');
+						reject(err);
+					});
+			});
+		},
+
+		// 社交登录与刷新 token 已移除
+
+		/**
+		 * 获取用户信息方法
+		 * @function setUserInfos
+		 * @async
+		 */
+		async setUserInfos() {
+			await getUserInfo().then((res) => {
+				const userInfo: any = {
+					user: res.data,
+					time: new Date().getTime(),
+					roles: res.data.roleList,
+					authBtnList: res.data.permissions,
+					tenantId: res.data.tenantId,
+					tenantName: res.data.tenantName || ''
+				};
+				this.userInfos = userInfo;
+
+				//设置租户
+				this.updateTenantInfo(res.data.tenantId, res.data.tenantName);
+			});
+		},
+
+		/**
+		 * 更新租户信息方法
+		 * @function updateTenantInfo
+		 * @param {string} tenantId - 租户ID
+		 * @param {string} tenantName - 租户名称
+		 */
+		updateTenantInfo(tenantId: string, tenantName: string) {
+			this.userInfos.tenantId = tenantId;
+			this.userInfos.tenantName = tenantName;
+
+				// 保存租户信息到本地
+				Session.set(STORAGE_KEYS.TENANT_ID, tenantId);
+				Local.set(STORAGE_KEYS.TENANT_ID, tenantId);
+				Cookies.set(STORAGE_KEYS.TENANT_ID, tenantId);
+		},
+	},
+});

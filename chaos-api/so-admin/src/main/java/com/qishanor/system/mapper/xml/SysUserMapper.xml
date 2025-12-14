@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qishanor.system.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.qishanor.system.model.vo.UserLoginVo">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="tel" column="tel"/>
+        <result property="email" column="email"/>
+        <result property="avatar" column="avatar"/>
+        <result property="isSuper" column="is_super"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+        <collection property="roleList" ofType="com.qishanor.system.model.SysRole"
+                    column="{userId=id}" select="com.qishanor.system.mapper.SysRoleMapper.selectRolesByUserId" >
+        </collection>
+
+    </resultMap>
+
+    <select id="pageBy" parameterType="com.qishanor.system.model.dto.UserDto" resultMap="BaseResultMap">
+        select * from sys_user
+        <where>
+            <if test="query.deptId!=null and query.deptId!=''">
+                and dept_id=#{query.deptId}
+            </if>
+            <if test="query.username!=null and query.username!=''">
+                <bind name="usernameLike" value="'%'+query.username+'%'"></bind>
+                and username like #{usernameLike}
+            </if>
+        </where>
+
+    </select>
+
+</mapper>
+
+
